@@ -54,7 +54,7 @@ $query = new Query([$queryItem]);
 $events = $client->read(query: $query);
 echo "Found " . count($events) . " order events:\n";
 foreach ($events as $seqEvent) {
-    echo "  [{$seqEvent->position}] {$seqEvent->event()->event_type}\n";
+    echo "  [{$seqEvent->position}] {$seqEvent->event->event_type}\n";
 }
 echo "\n";
 
@@ -71,7 +71,7 @@ $query = new Query([$queryItem]);
 $events = $client->read(query: $query);
 echo "Found " . count($events) . " events for order O1:\n";
 foreach ($events as $seqEvent) {
-    echo "  [{$seqEvent->position}] {$seqEvent->event()->event_type} - tags: " . implode(', ', $seqEvent->event()->tags) . "\n";
+    echo "  [{$seqEvent->position}] {$seqEvent->event->event_type} - tags: " . implode(', ', $seqEvent->event->tags) . "\n";
 }
 echo "\n";
 
@@ -88,7 +88,7 @@ $query = new Query([$queryItem]);
 $events = $client->read(query: $query);
 echo "Found " . count($events) . " payment/shipping events for order O1:\n";
 foreach ($events as $seqEvent) {
-    echo "  [{$seqEvent->position}] {$seqEvent->event()->event_type}\n";
+    echo "  [{$seqEvent->position}] {$seqEvent->event->event_type}\n";
 }
 echo "\n";
 
@@ -106,7 +106,7 @@ $query = new Query([
 $events = $client->read(query: $query);
 echo "Found " . count($events) . " user OR product events:\n";
 foreach ($events as $seqEvent) {
-    echo "  [{$seqEvent->position}] {$seqEvent->event()->event_type} - tags: " . implode(', ', $seqEvent->event()->tags) . "\n";
+    echo "  [{$seqEvent->position}] {$seqEvent->event->event_type} - tags: " . implode(', ', $seqEvent->event->tags) . "\n";
 }
 echo "\n";
 
@@ -124,7 +124,7 @@ $query = new Query([
 $events = $client->read(query: $query);
 echo "Found " . count($events) . " order creation OR payment events:\n";
 foreach ($events as $seqEvent) {
-    echo "  [{$seqEvent->position}] {$seqEvent->event()->event_type}\n";
+    echo "  [{$seqEvent->position}] {$seqEvent->event->event_type}\n";
 }
 
 echo "\n✓ Done!\n";

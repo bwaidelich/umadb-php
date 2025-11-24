@@ -87,22 +87,26 @@ impl Event {
     }
 
     /// Get the event type
-    pub fn event_type(&self) -> String {
+    #[php(getter)]
+    pub fn get_event_type(&self) -> String {
         self.event_type.clone()
     }
 
     /// Get the event data as a string
-    pub fn data(&self) -> String {
+    #[php(getter)]
+    pub fn get_data(&self) -> String {
         String::from_utf8_lossy(&self.data).to_string()
     }
 
     /// Get the tags
-    pub fn tags(&self) -> Vec<String> {
+    #[php(getter)]
+    pub fn get_tags(&self) -> Vec<String> {
         self.tags.clone()
     }
 
     /// Get the UUID
-    pub fn uuid(&self) -> Option<String> {
+    #[php(getter)]
+    pub fn get_uuid(&self) -> Option<String> {
         self.uuid.clone()
     }
 
@@ -159,12 +163,14 @@ pub struct SequencedEvent {
 #[php_impl]
 impl SequencedEvent {
     /// Get the event
-    pub fn event(&self) -> Event {
+    #[php(getter)]
+    pub fn get_event(&self) -> Event {
         self.event.clone()
     }
 
     /// Get the position
-    pub fn position(&self) -> u64 {
+    #[php(getter)]
+    pub fn get_position(&self) -> u64 {
         self.position
     }
 
@@ -224,12 +230,14 @@ impl QueryItem {
     }
 
     /// Get the types
-    pub fn types(&self) -> Vec<String> {
+    #[php(getter)]
+    pub fn get_types(&self) -> Vec<String> {
         self.types.clone()
     }
 
     /// Get the tags
-    pub fn tags(&self) -> Vec<String> {
+    #[php(getter)]
+    pub fn get_tags(&self) -> Vec<String> {
         self.tags.clone()
     }
 }
@@ -275,7 +283,8 @@ impl Query {
     }
 
     /// Get the query items
-    pub fn items(&self) -> Vec<QueryItem> {
+    #[php(getter)]
+    pub fn get_items(&self) -> Vec<QueryItem> {
         self.items.clone()
     }
 }
@@ -326,12 +335,14 @@ impl AppendCondition {
     }
 
     /// Get the query
-    pub fn fail_if_events_match(&self) -> Query {
+    #[php(getter)]
+    pub fn get_fail_if_events_match(&self) -> Query {
         self.fail_if_events_match.clone()
     }
 
     /// Get the position constraint
-    pub fn after(&self) -> Option<u64> {
+    #[php(getter)]
+    pub fn get_after(&self) -> Option<u64> {
         self.after
     }
 }

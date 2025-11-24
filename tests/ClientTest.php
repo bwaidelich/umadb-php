@@ -93,8 +93,8 @@ class ClientTest extends TestCase
 
         foreach ($events as $seqEvent) {
             $this->assertIsObject($seqEvent);
-            $this->assertIsInt($seqEvent->position());
-            $this->assertInstanceOf(Event::class, $seqEvent->event());
+            $this->assertIsInt($seqEvent->getPosition());
+            $this->assertInstanceOf(Event::class, $seqEvent->getEvent());
         }
     }
 
@@ -125,9 +125,9 @@ class ClientTest extends TestCase
 
         // Verify all returned events match the query
         foreach ($events as $seqEvent) {
-            $event = $seqEvent->event();
-            $this->assertEquals('QueryTest', $event->event_type());
-            $this->assertContains('query-test', $event->tags());
+            $event = $seqEvent->getEvent();
+            $this->assertEquals('QueryTest', $event->getEventType());
+            $this->assertContains('query-test', $event->getTags());
         }
     }
 
@@ -179,7 +179,7 @@ class ClientTest extends TestCase
 
         // Verify events are in descending order
         if (count($events) >= 2) {
-            $this->assertGreaterThan($events[1]->position(), $events[0]->position());
+            $this->assertGreaterThan($events[1]->getPosition(), $events[0]->getPosition());
         }
     }
 
@@ -294,10 +294,10 @@ class ClientTest extends TestCase
 
         $event = new Event($eventType, $data, $tags, $uuid);
 
-        $this->assertEquals($eventType, $event->event_type());
-        $this->assertEquals($data, $event->data());
-        $this->assertEquals($tags, $event->tags());
-        $this->assertEquals($uuid, $event->uuid());
+        $this->assertEquals($eventType, $event->getEventType());
+        $this->assertEquals($data, $event->getData());
+        $this->assertEquals($tags, $event->getTags());
+        $this->assertEquals($uuid, $event->getUuid());
     }
 
     public function testBinaryData(): void
