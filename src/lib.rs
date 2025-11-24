@@ -18,9 +18,43 @@ use uuid::Uuid;
 
 use ext_php_rs::zend::ClassEntry;
 
+/// PHP code to define exception classes
+const EXCEPTION_CLASSES_PHP: &str = r#"
+namespace UmaDB\Exception {
+    class UmaDBException extends \Exception {}
+    class IntegrityException extends UmaDBException {}
+    class TransportException extends UmaDBException {}
+    class CorruptionException extends UmaDBException {}
+    class IoException extends UmaDBException {}
+}
+"#;
+
+/// Ensure exception classes are defined
+fn ensure_exception_classes() {
+    use std::ffi::CString;
+
+    // Try to find one of the exception classes to see if they're already defined
+    if ClassEntry::try_find("UmaDB\\Exception\\IntegrityException").is_some() {
+        return; // Already defined
+    }
+
+    // Define the exception classes by evaluating PHP code
+    unsafe {
+        let code = CString::new(EXCEPTION_CLASSES_PHP).unwrap();
+        ext_php_rs::ffi::zend_eval_string(
+            code.as_ptr() as *mut _,
+            std::ptr::null_mut(),
+            b"umadb exception classes\0".as_ptr() as *const _,
+        );
+    }
+}
+
 /// Helper to throw a specific exception class by name
 fn throw_exception(class_name: &str, message: String) -> PhpException {
-    // Try to get the class entry for the exception class
+    // Ensure exception classes are defined
+    ensure_exception_classes();
+
+    // Try to get the class entry
     if let Some(ce) = ClassEntry::try_find(class_name) {
         PhpException::new(message, 0, ce)
     } else {
