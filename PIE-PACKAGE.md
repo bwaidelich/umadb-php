@@ -4,7 +4,7 @@ This document describes the PIE (PHP Installer for Extensions) package configura
 
 ## Overview
 
-PIE is the modern successor to PECL, providing a Composer-like experience for installing PHP extensions. The UmaDB extension now supports installation via PIE while maintaining backward compatibility with PECL.
+PIE is the modern PHP extension installer, providing a Composer-like experience for installing PHP extensions. The UmaDB extension supports installation via PIE.
 
 ## Package Configuration
 
@@ -82,7 +82,7 @@ pie install
 PIE will:
 
 1. Clone/download the extension source
-2. Detect `config.m4` (PECL compatibility)
+2. Detect `config.m4` (build configuration)
 3. Run `phpize` and `./configure`
 4. Execute `make` which triggers Cargo via `Makefile.frag`
 5. Install the compiled `.so`/`.dylib` to PHP's extension directory
@@ -111,10 +111,9 @@ Subsequent builds: ~20-30 seconds (incremental compilation)
 
 ## Compatibility Matrix
 
-| Tool | Support | Notes |
-|------|---------|-------|
-| PIE | ✅ Full | Modern, recommended |
-| PECL | ✅ Full | Traditional, still works |
+| Installation Method | Support | Notes |
+|---------------------|---------|-------|
+| PIE | ✅ Full | Recommended |
 | Manual Build | ✅ Full | Via `cargo build` or `make` |
 | Composer | ⚠️ Partial | Can declare dependency, can't install |
 
@@ -125,12 +124,6 @@ Subsequent builds: ~20-30 seconds (incremental compilation)
 1. Ensure the GitHub repository is public at https://github.com/bwaidelich/umadb-php
 2. Submit to [Packagist](https://packagist.org/packages/submit)
 3. Add the GitHub webhook for auto-updates
-
-### To PECL
-
-1. Create PECL account at https://pecl.php.net/account-request.php
-2. Upload `umadb-0.1.1.tgz` via web interface
-3. Or use: `pecl upload umadb-0.1.1.tgz`
 
 ## Testing the PIE Package
 
@@ -161,7 +154,7 @@ Traditional C extensions:
 - Link against PHP libraries
 
 UmaDB extension:
-- Uses `config.m4` for PECL compatibility
+- Uses `config.m4` for PHP extension build configuration
 - Actually builds with Cargo (Rust)
 - Uses `ext-php-rs` bindings
 - Dynamic linking via `build.rs`
@@ -174,7 +167,6 @@ PIE handles this gracefully because it:
 ## Documentation
 
 - [PIE.md](PIE.md) - User installation guide
-- [PECL.md](PECL.md) - PECL installation guide
 - [INSTALL.md](INSTALL.md) - Manual installation guide
 
 ## References

@@ -23,7 +23,7 @@ UmaDB is a specialist event store for **Dynamic Consistency Boundaries (DCB)**, 
 
 ## Installation
 
-### Option 1: PIE (Recommended - Modern)
+### Option 1: PIE (Recommended)
 
 **Note:** Requires Rust 1.70+ and PIE installed. See [PIE.md](PIE.md) for details.
 
@@ -39,25 +39,7 @@ chmod +x pie.phar && sudo mv pie.phar /usr/local/bin/pie
 pie install wwwision/umadb-php
 ```
 
-### Option 2: PECL (Traditional)
-
-**Note:** Requires Rust 1.70+ installed. See [PECL.md](PECL.md) for details.
-
-```bash
-# Install Rust (if not already installed)
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-
-# Install via PECL
-pecl install umadb
-
-# Or from local package
-git clone https://github.com/bwaidelich/umadb-php.git
-cd umadb-php
-pecl package
-pecl install umadb-0.1.1.tgz
-```
-
-### Option 3: Building from Source
+### Option 2: Building from Source
 
 ```bash
 # Clone the repository

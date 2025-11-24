@@ -1,4 +1,4 @@
-# Makefile fragment for PECL build
+# Makefile fragment for PHP extension build
 # This intercepts the build process by using our wrapper script as libtool
 
 # Force override LIBTOOL to use our wrapper script (override is needed because LIBTOOL is set earlier)

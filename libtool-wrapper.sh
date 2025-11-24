@@ -2,7 +2,7 @@
 # Libtool wrapper that builds with Cargo instead of linking with libtool
 #
 # This script intercepts the libtool call and builds the Rust extension with Cargo.
-# It's called by the PECL build system when it tries to link the extension.
+# It's called by the PHP extension build system when it tries to link the extension.
 
 # Find the source directory (where Cargo.toml is)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -38,7 +38,7 @@ if [[ "$*" == *"--mode=link"* ]] && [[ "$*" == *"umadb.la"* ]]; then
     cp "$SCRIPT_DIR/target/release/$EXT_FILE" .libs/umadb.so
     cp "$SCRIPT_DIR/target/release/$EXT_FILE" modules/umadb.so
 
-    # Create a dummy .la file to satisfy PECL
+    # Create a dummy .la file to satisfy the build system
     echo "# Dummy libtool library file" > umadb.la
     echo "dlname='umadb.so'" >> umadb.la
     echo "library_names='umadb.so'" >> umadb.la

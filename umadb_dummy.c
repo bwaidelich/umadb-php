@@ -1,4 +1,4 @@
-/* Dummy C file for PECL build system compatibility
+/* Dummy C file for PHP extension build system compatibility
  *
  * The actual UmaDB extension is built with Rust using Cargo.
  * This file provides minimal PHP module scaffolding to satisfy libtool linking.

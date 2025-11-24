@@ -19,7 +19,7 @@ modules/
 .deps/
 *.cache
 
-# PECL Build Files
+# PHP Extension Build Files
 run-tests.php
 tmp-php.ini
 .configure-*
@@ -45,7 +45,7 @@ missing
 mkinstalldirs
 modules/
 
-# PECL Packages
+# Extension Packages
 *.tgz
 
 # PHPUnit

@@ -1,6 +1,6 @@
 # PIE Installation Guide
 
-UmaDB PHP extension supports installation via [PIE](https://github.com/php/pie) (PHP Installer for Extensions), the modern successor to PECL.
+UmaDB PHP extension supports installation via [PIE](https://github.com/php/pie) (PHP Installer for Extensions).
 
 ## What is PIE?
 
@@ -159,17 +159,6 @@ ls $(php-config --extension-dir)/umadb.so
 php --ini
 ```
 
-## Comparison with PECL
-
-| Feature | PECL | PIE |
-|---------|------|-----|
-| Dependency Resolution | Limited | Full (via Composer) |
-| Build System | phpize/configure | Supports custom (Cargo) |
-| Version Constraints | Basic | Composer-style |
-| Per-Project Extensions | No | Yes |
-| Modern CLI | No | Yes |
-| Active Development | Limited | Active |
-
 ## Special Notes for UmaDB
 
 **Important:** UmaDB PHP extension is built with Rust, not C. This means:
@@ -183,5 +172,4 @@ php --ini
 
 - [PIE Documentation](https://github.com/php/pie)
 - [INSTALL.md](INSTALL.md) - Manual installation guide
-- [PECL.md](PECL.md) - PECL installation guide
 - [README.md](README.md) - API documentation

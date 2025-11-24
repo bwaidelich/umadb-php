@@ -47,35 +47,28 @@ source $HOME/.cargo/env
 
 ## Installation Methods
 
-### Method 1: PECL Installation (Easiest)
+### Method 1: PIE (Recommended)
 
-**Note:** This method still requires Rust to be installed since the extension is built from source.
+PIE (PHP Installer for Extensions) is the modern way to install PHP extensions.
+
+**Note:** Requires Rust 1.70+ to be installed since the extension is built from source.
 
 ```bash
 # Install Rust (if not already installed)
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source $HOME/.cargo/env
 
-# Install via PECL (once published to PECL repository)
-pecl install umadb
+# Install PIE
+wget https://github.com/php/pie/releases/latest/download/pie.phar
+chmod +x pie.phar && sudo mv pie.phar /usr/local/bin/pie
+
+# Install extension
+pie install wwwision/umadb-php
 ```
 
-Or from local package:
+See [PIE.md](PIE.md) for detailed PIE installation guide.
 
-```bash
-git clone https://github.com/bwaidelich/umadb-php.git
-cd umadb-php
-pecl package
-pecl install umadb-0.1.1.tgz
-```
-
-See [PECL.md](PECL.md) for detailed PECL installation guide.
-
-### Method 2: Using the Build Script (Recommended for Development)
-
-## Building the Extension
-
-### Method 1: Using the Build Script (Recommended)
+### Method 2: Using the Build Script
 
 ```bash
 # Clone the repository
@@ -91,7 +84,7 @@ The script will:
 2. Build the extension
 3. Show installation instructions
 
-### Method 2: Using Make
+### Method 3: Using Make
 
 ```bash
 # Build the extension
@@ -101,7 +94,7 @@ make build
 sudo make install
 ```
 
-### Method 3: Manual Build
+### Method 4: Manual Build
 
 ```bash
 # Build the Rust extension
