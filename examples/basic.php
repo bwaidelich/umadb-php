@@ -83,12 +83,12 @@ echo "✓ Read " . count($allEvents) . " events\n\n";
 echo "Recent events:\n";
 $recentEvents = array_slice($allEvents, -5);
 foreach ($recentEvents as $seqEvent) {
-    $data = json_decode($seqEvent->event->data, true);
+    $data = json_decode($seqEvent->event()->data, true);
     echo sprintf(
         "  [%d] %s - tags: %s\n",
         $seqEvent->position,
-        $seqEvent->event->event_type,
-        implode(', ', $seqEvent->event->tags)
+        $seqEvent->event()->event_type,
+        implode(', ', $seqEvent->event()->tags)
     );
 }
 
