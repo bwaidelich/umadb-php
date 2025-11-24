@@ -16,25 +16,37 @@ use uuid::Uuid;
 // Error Handling
 // ============================================================================
 
-/// Convert DCBError to PHP exception
-///
-/// For now, we use the standard PhpException with custom messages that indicate
-/// the error type. In the future, these could be proper custom exception classes.
+use ext_php_rs::zend::ClassEntry;
+
+/// Helper to throw a specific exception class by name
+fn throw_exception(class_name: &str, message: String) -> PhpException {
+    // Try to get the class entry for the exception class
+    if let Some(ce) = ClassEntry::try_find(class_name) {
+        PhpException::new(message, 0, ce)
+    } else {
+        // Fallback to default exception if class not found
+        PhpException::default(message)
+    }
+}
+
+/// Convert DCBError to appropriate PHP exception
 fn dcb_error_to_exception(err: DCBError) -> PhpException {
     match err {
         DCBError::IntegrityError(msg) => {
-            PhpException::default(format!("UmaDB\\Exception\\IntegrityException: {}", msg))
+            throw_exception("UmaDB\\Exception\\IntegrityException", msg)
         }
         DCBError::TransportError(msg) => {
-            PhpException::default(format!("UmaDB\\Exception\\TransportException: {}", msg))
+            throw_exception("UmaDB\\Exception\\TransportException", msg)
         }
         DCBError::Corruption(msg) => {
-            PhpException::default(format!("UmaDB\\Exception\\CorruptionException: {}", msg))
+            throw_exception("UmaDB\\Exception\\CorruptionException", msg)
         }
         DCBError::Io(err) => {
-            PhpException::default(format!("UmaDB\\Exception\\IoException: {}", err))
+            throw_exception("UmaDB\\Exception\\IoException", err.to_string())
         }
-        _ => PhpException::default(format!("UmaDB\\Exception\\UmaDBException: {:?}", err)),
+        _ => {
+            throw_exception("UmaDB\\Exception\\UmaDBException", format!("{:?}", err))
+        }
     }
 }
 

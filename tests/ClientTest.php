@@ -10,7 +10,8 @@ use UmaDB\Event;
 use UmaDB\Query;
 use UmaDB\QueryItem;
 use UmaDB\AppendCondition;
-use Exception;
+use UmaDB\Exception\IntegrityException;
+use UmaDB\Exception\TransportException;
 
 /**
  * Integration tests for UmaDB PHP client
@@ -27,7 +28,7 @@ class ClientTest extends TestCase
     {
         try {
             $this->client = new Client(self::SERVER_URL);
-        } catch (\Exception $e) {
+        } catch (TransportException $e) {
             $this->markTestSkipped('UmaDB server not available: ' . $e->getMessage());
         }
     }
@@ -249,8 +250,7 @@ class ClientTest extends TestCase
             $this->generateUuid()  // Different UUID
         );
 
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches('/IntegrityException/');
+        $this->expectException(IntegrityException::class);
         $this->client->append([$event2], $condition);
     }
 
@@ -283,6 +283,7 @@ class ClientTest extends TestCase
         $position2 = $this->client->append([$event], $condition);
 
         $this->assertEquals($position1, $position2);
+
     }
 
     public function testEventProperties(): void
