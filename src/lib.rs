@@ -17,48 +17,26 @@ use uuid::Uuid;
 // ============================================================================
 
 /// Convert DCBError to PHP exception
+///
+/// For now, we use the standard PhpException with custom messages that indicate
+/// the error type. In the future, these could be proper custom exception classes.
 fn dcb_error_to_exception(err: DCBError) -> PhpException {
     match err {
         DCBError::IntegrityError(msg) => {
-            PhpException::from_class::<IntegrityException>(msg)
+            PhpException::default(format!("UmaDB\\Exception\\IntegrityException: {}", msg))
         }
         DCBError::TransportError(msg) => {
-            PhpException::from_class::<TransportException>(msg)
+            PhpException::default(format!("UmaDB\\Exception\\TransportException: {}", msg))
         }
         DCBError::Corruption(msg) => {
-            PhpException::from_class::<CorruptionException>(msg)
+            PhpException::default(format!("UmaDB\\Exception\\CorruptionException: {}", msg))
         }
         DCBError::Io(err) => {
-            PhpException::from_class::<IoException>(err.to_string())
+            PhpException::default(format!("UmaDB\\Exception\\IoException: {}", err))
         }
-        _ => PhpException::from_class::<UmaDBException>(format!("{:?}", err)),
+        _ => PhpException::default(format!("UmaDB\\Exception\\UmaDBException: {:?}", err)),
     }
 }
-
-// ============================================================================
-// Custom Exception Classes
-// ============================================================================
-// TODO: These should extend PhpException, but for now we'll use simple classes
-
-#[php_class]
-#[php(name = "UmaDB\\Exception\\IntegrityException")]
-pub struct IntegrityException;
-
-#[php_class]
-#[php(name = "UmaDB\\Exception\\TransportException")]
-pub struct TransportException;
-
-#[php_class]
-#[php(name = "UmaDB\\Exception\\CorruptionException")]
-pub struct CorruptionException;
-
-#[php_class]
-#[php(name = "UmaDB\\Exception\\IoException")]
-pub struct IoException;
-
-#[php_class]
-#[php(name = "UmaDB\\Exception\\UmaDBException")]
-pub struct UmaDBException;
 
 // ============================================================================
 // Event Class
@@ -518,11 +496,6 @@ impl Client {
 #[php_module]
 pub fn get_module(module: ModuleBuilder) -> ModuleBuilder {
     module
-        .class::<IntegrityException>()
-        .class::<TransportException>()
-        .class::<CorruptionException>()
-        .class::<IoException>()
-        .class::<UmaDBException>()
         .class::<Event>()
         .class::<SequencedEvent>()
         .class::<QueryItem>()

@@ -10,7 +10,7 @@ use UmaDB\Event;
 use UmaDB\Query;
 use UmaDB\QueryItem;
 use UmaDB\AppendCondition;
-use UmaDB\Exception\IntegrityException;
+use Exception;
 
 /**
  * Integration tests for UmaDB PHP client
@@ -249,7 +249,8 @@ class ClientTest extends TestCase
             $this->generateUuid()  // Different UUID
         );
 
-        $this->expectException(IntegrityException::class);
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessageMatches('/IntegrityException/');
         $this->client->append([$event2], $condition);
     }
 
