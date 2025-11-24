@@ -1,0 +1,31 @@
+[package]
+name = "umadb-php"
+version = "0.1.1"
+edition = "2021"
+license = "MIT"
+description = "PHP bindings for UmaDB event store"
+repository = "https://github.com/bwaidelich/umadb-php"
+authors = ["Bastian Waidelich <bastian@waidelich.net>"]
+
+[lib]
+name = "umadb_php"
+crate-type = ["cdylib"]
+
+[dependencies]
+# UmaDB client and DCB types
+umadb-client = { git = "https://github.com/umadb-io/umadb.git", package = "umadb-client" }
+umadb-dcb = { git = "https://github.com/umadb-io/umadb.git", package = "umadb-dcb" }
+
+# PHP bindings framework
+ext-php-rs = "0.15"
+
+# UUID support
+uuid = { version = "1.18", features = ["v4"] }
+
+# Async runtime (used internally by client)
+tokio = { version = "1.48", features = ["rt-multi-thread"] }
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true

@@ -1,0 +1,72 @@
+{
+  "name": "wwwision/umadb-php",
+  "description": "PHP bindings for UmaDB event store with Rust FFI",
+  "type": "php-ext",
+  "license": "MIT",
+  "keywords": [
+    "event-store",
+    "event-sourcing",
+    "dcb",
+    "dynamic-consistency-boundaries",
+    "umadb"
+  ],
+  "authors": [
+    {
+      "name": "Bastian Waidelich",
+      "email": "bastian@waidelich.net"
+    }
+  ],
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/bwaidelich"
+    },
+    {
+      "type": "paypal",
+      "url": "https://www.paypal.me/bwaidelich"
+    }
+  ],
+  "require": {
+    "php": "^8.4"
+  },
+  "replace": {
+    "ext-umadb": "*"
+  },
+  "php-ext": {
+    "extension-name": "umadb",
+    "priority": 20,
+    "support-zts": false,
+    "configure-options": [
+      {
+        "name": "enable-umadb",
+        "description": "Enable UmaDB support",
+        "needs-value": false
+      }
+    ]
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^10.0",
+    "phpstan/phpstan": "^1.10"
+  },
+  "autoload": {
+    "psr-4": {
+      "UmaDB\\": "src/php/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "UmaDB\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "phpunit",
+    "analyse": "phpstan analyse src tests",
+    "build": "cargo build --release"
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "php-http/discovery": true
+    }
+  }
+}

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.10.13" version="2.0"
+  xmlns="http://pear.php.net/dtd/package-2.0"
+  xmlns:tasks="http://pear.php.net/dtd/tasks-1.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+http://pear.php.net/dtd/tasks-1.0.xsd
+http://pear.php.net/dtd/package-2.0
+http://pear.php.net/dtd/package-2.0.xsd">
+ <name>umadb</name>
+ <channel>pecl.php.net</channel>
+ <summary>UmaDB event store client for PHP</summary>
+ <description>
+  PHP bindings for UmaDB event store built with Rust.
+
+  UmaDB is a specialist event store for Dynamic Consistency Boundaries (DCB),
+  enabling flexible, query-driven append conditions for implementing business
+  rules without hardcoded aggregate boundaries.
+
+  Features:
+  - Full DCB API implementation
+  - High performance Rust-powered operations
+  - Tag-based event filtering
+  - Optimistic concurrency control
+  - Idempotent appends with UUIDs
+
+  Note: Requires Rust 1.70+ to be installed for building.
+ </description>
+ <lead>
+  <name>Bastian Waidelich</name>
+  <user>bwaidelich</user>
+  <email>bastian@waidelich.net</email>
+  <active>yes</active>
+ </lead>
+ <date>2025-11-24</date>
+ <time>12:00:00</time>
+ <version>
+  <release>0.1.1</release>
+  <api>0.1.0</api>
+ </version>
+ <stability>
+  <release>beta</release>
+  <api>beta</api>
+ </stability>
+ <license uri="https://opensource.org/license/mit">MIT</license>
+ <notes>
+  Updated release with PHP 8.4+ support.
+
+  Changes in 0.1.1:
+  - Updated ext-php-rs from 0.12 to 0.15 (adds PHP 8.4 support)
+  - Fixed compilation issues with newer ext-php-rs API
+  - Added build.rs for proper macOS linking
+  - Updated attribute syntax to match ext-php-rs 0.14+ conventions
+
+  Features:
+  - Full Dynamic Consistency Boundaries (DCB) API
+  - Client class for connecting to UmaDB server
+  - Event, Query, and AppendCondition classes
+  - Comprehensive error handling with custom exceptions
+  - Tag-based filtering and querying
+  - Optimistic concurrency control
+
+  Requirements:
+  - PHP 8.4 or higher
+  - Rust 1.70+ (for building from source)
+  - UmaDB server running and accessible
+ </notes>
+ <contents>
+  <dir name="/">
+   <file name="LICENSE-MIT" role="doc" />
+   <file name="README.md" role="doc" />
+   <file name="INSTALL.md" role="doc" />
+   <file name="QUICKSTART.md" role="doc" />
+   <file name="PECL.md" role="doc" />
+   <file name="PIE.md" role="doc" />
+   <file name="PIE-PACKAGE.md" role="doc" />
+   <file name="composer.json" role="src" />
+   <file name="Cargo.toml" role="src" />
+   <file name="build.rs" role="src" />
+   <file name="Makefile" role="src" />
+   <file name="Makefile.frag" role="src" />
+   <file name="libtool-wrapper.sh" role="src" />
+   <file name="build.sh" role="src" />
+   <file name="config.m4" role="src" />
+   <file name="umadb_dummy.c" role="src" />
+   <dir name="src">
+    <file name="lib.rs" role="src" />
+   </dir>
+   <dir name="examples">
+    <file name="basic.php" role="doc" />
+    <file name="query.php" role="doc" />
+    <file name="consistency.php" role="doc" />
+   </dir>
+   <dir name="tests">
+    <file name="ClientTest.php" role="test" />
+   </dir>
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>8.4.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.10.0</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <providesextension>umadb</providesextension>
+ <extsrcrelease>
+  <configureoption
+    name="enable-umadb"
+    default="yes"
+    prompt="Enable UmaDB support?" />
+ </extsrcrelease>
+</package>

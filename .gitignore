@@ -1,0 +1,84 @@
+# Rust
+/target/
+Cargo.lock
+**/*.rs.bk
+
+# PHP Composer
+/vendor/
+composer.lock
+
+# PHP Extension Build Artifacts
+*.lo
+*.la
+*.o
+*.so
+*.dylib
+*.dll
+.libs/
+modules/
+.deps/
+*.cache
+
+# PECL Build Files
+run-tests.php
+tmp-php.ini
+.configure-*
+acinclude.m4
+aclocal.m4
+autom4te.cache/
+build/
+config.guess
+config.h
+config.h.in
+config.log
+config.nice
+config.status
+config.sub
+configure
+configure.ac
+configure.in
+include/
+install-sh
+libtool
+ltmain.sh
+missing
+mkinstalldirs
+modules/
+
+# PECL Packages
+*.tgz
+
+# PHPUnit
+.phpunit.result.cache
+.phpunit.cache/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+*~
+.project
+.buildpath
+.settings/
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+*.tmp
+*.temp
+/tmp/
