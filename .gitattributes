@@ -1,0 +1,19 @@
+# Exclude development and build files from distribution
+/.github export-ignore
+/tests export-ignore
+/examples export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/phpunit.xml export-ignore
+/phpstan.neon export-ignore
+/Makefile export-ignore
+/build.sh export-ignore
+
+# Include stubs (explicitly marked to ensure they're distributed)
+/stubs export-include
+
+# Keep source files for documentation
+/README.md export-include
+/LICENSE export-include
+/composer.json export-include
+/CLAUDE.md export-include
