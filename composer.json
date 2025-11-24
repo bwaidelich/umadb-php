@@ -45,11 +45,6 @@
     "phpunit/phpunit": "^10.0",
     "phpstan/phpstan": "^1.10"
   },
-  "autoload": {
-    "psr-4": {
-      "UmaDB\\": "src/php/"
-    }
-  },
   "autoload-dev": {
     "psr-4": {
       "UmaDB\\Tests\\": "tests/"
@@ -57,7 +52,7 @@
   },
   "scripts": {
     "test": "phpunit",
-    "analyse": "phpstan analyse src tests",
+    "analyse": "phpstan analyse tests",
     "build": "cargo build --release"
   },
   "config": {
