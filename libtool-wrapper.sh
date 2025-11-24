@@ -49,6 +49,31 @@ if [[ "$*" == *"--mode=link"* ]] && [[ "$*" == *"umadb.la"* ]]; then
     exit 0
 fi
 
+# Check if this is the install step (installing umadb.la)
+if [[ "$*" == *"--mode=install"* ]] && [[ "$*" == *"umadb.la"* ]]; then
+    # Extract the destination directory from the arguments
+    dest=""
+    for arg in "$@"; do
+        if [[ "$arg" == /* ]]; then
+            parent_dir=$(dirname "$arg" 2>/dev/null)
+            if [ -d "$parent_dir" ]; then
+                dest="$arg"
+                break
+            fi
+        fi
+    done
+
+    if [ -n "$dest" ]; then
+        # Install means copying the built extension to the destination
+        mkdir -p "$(dirname "$dest")"
+        if [ -f ".libs/umadb.so" ]; then
+            cp .libs/umadb.so "$(dirname "$dest")/umadb.so"
+            echo "✓ Extension installed to: $(dirname "$dest")/umadb.so"
+            exit 0
+        fi
+    fi
+fi
+
 # For compile steps, extract and run the compiler command directly
 if [[ "$*" == *"--mode=compile"* ]]; then
     # Parse out the compiler and its arguments

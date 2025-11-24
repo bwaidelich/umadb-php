@@ -35,7 +35,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
  <date>2025-11-24</date>
  <time>12:00:00</time>
  <version>
-  <release>0.1.2</release>
+  <release>0.1.3</release>
   <api>0.1.0</api>
  </version>
  <stability>
@@ -44,10 +44,16 @@ http://pear.php.net/dtd/package-2.0.xsd">
  </stability>
  <license uri="https://opensource.org/license/mit">MIT</license>
  <notes>
-  Bug fix release for PIE installation.
+  Bug fix release for PIE installation (complete fix).
+
+  Changes in 0.1.3:
+  - Fixed PIE installation failure on macOS (complete solution)
+  - Added AC_CONFIG_COMMANDS to properly replace libtool after configure
+  - Improved libtool-wrapper.sh to handle compile and install operations
+  - Tested and verified build works with phpize/configure/make
 
   Changes in 0.1.2:
-  - Fixed PIE installation failure on macOS due to libtool wrapper issues
+  - Initial attempt at fixing PIE installation (incomplete)
   - Improved libtool-wrapper.sh to handle compile operations independently
   - Added LIBTOOL override in config.m4 for better build system integration
 
