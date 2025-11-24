@@ -31,9 +31,9 @@ cargo build --release
 # Determine extension file
 UNAME_S=$(uname -s)
 if [ "$UNAME_S" = "Linux" ]; then
-    EXT_FILE="target/release/libumadb_php.so"
+    EXT_FILE="target/release/libumadb.so"
 elif [ "$UNAME_S" = "Darwin" ]; then
-    EXT_FILE="target/release/libumadb_php.dylib"
+    EXT_FILE="target/release/libumadb.dylib"
 else
     echo "Error: Unsupported platform: $UNAME_S"
     exit 1
@@ -50,10 +50,10 @@ echo "Extension location: $EXT_FILE"
 echo ""
 echo "To install the extension:"
 echo "  1. Copy the extension to your PHP extension directory:"
-echo "     sudo cp $EXT_FILE \$(php-config --extension-dir)/umadb_php.so"
+echo "     sudo cp $EXT_FILE \$(php-config --extension-dir)/umadb.so"
 echo ""
 echo "  2. Add to your php.ini:"
-echo "     extension=umadb_php.so"
+echo "     extension=umadb.so"
 echo ""
 echo "  3. Verify installation:"
 echo "     php -m | grep umadb"

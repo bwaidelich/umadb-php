@@ -18,9 +18,9 @@ if [[ "$*" == *"--mode=link"* ]] && [[ "$*" == *"umadb.la"* ]]; then
 
     # Determine OS and extension file name
     if [[ "$(uname -s)" == "Linux" ]]; then
-        EXT_FILE="libumadb_php.so"
+        EXT_FILE="libumadb.so"
     else
-        EXT_FILE="libumadb_php.dylib"
+        EXT_FILE="libumadb.dylib"
     fi
 
     # Build with Cargo in the source directory

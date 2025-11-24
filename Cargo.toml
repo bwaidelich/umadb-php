@@ -1,5 +1,5 @@
 [package]
-name = "umadb-php"
+name = "umadb"
 version = "0.1.4"
 edition = "2021"
 license = "MIT"
@@ -8,7 +8,7 @@ repository = "https://github.com/bwaidelich/umadb-php"
 authors = ["Bastian Waidelich <bastian@waidelich.net>"]
 
 [lib]
-name = "umadb_php"
+name = "umadb"
 crate-type = ["cdylib"]
 
 [dependencies]

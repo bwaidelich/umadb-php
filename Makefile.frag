@@ -7,8 +7,8 @@ override LIBTOOL = $(SHELL) $(top_srcdir)/libtool-wrapper.sh
 # Detect OS
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
-    EXT_FILE = libumadb_php.so
+    EXT_FILE = libumadb.so
 endif
 ifeq ($(UNAME_S),Darwin)
-    EXT_FILE = libumadb_php.dylib
+    EXT_FILE = libumadb.dylib
 endif

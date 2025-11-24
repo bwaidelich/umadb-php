@@ -14,7 +14,7 @@ endif
 # PHP extension directory
 PHP_EXT_DIR := $(shell php-config --extension-dir)
 TARGET_DIR := target/release
-EXTENSION_NAME := umadb_php
+EXTENSION_NAME := umadb
 
 help: ## Show this help message
 	@echo 'Usage: make [target]'
