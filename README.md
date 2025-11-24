@@ -1,6 +1,6 @@
 # UmaDB PHP Extension
 
-PHP bindings for **UmaDB** event store, built with Rust using [ext-php-rs](https://github.com/davidcole1340/ext-php-rs).
+PHP bindings for [UmaDB](https://github.com/umadb-io/umadb) event store, built with Rust using [ext-php-rs](https://github.com/davidcole1340/ext-php-rs).
 
 UmaDB is a specialist event store for **Dynamic Consistency Boundaries (DCB)**, enabling flexible, query-driven append conditions for implementing business rules without hardcoded aggregate boundaries.
 
