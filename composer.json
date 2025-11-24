@@ -29,9 +29,6 @@
   "require": {
     "php": "^8.4"
   },
-  "replace": {
-    "ext-umadb": "*"
-  },
   "php-ext": {
     "extension-name": "umadb",
     "priority": 20,
