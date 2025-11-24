@@ -93,7 +93,7 @@ $client = new Client('http://localhost:50051');
 $event = new Event(
     eventType: 'UserCreated',
     data: json_encode(['userId' => '12345', 'name' => 'Alice']),
-    tags: ['user', 'user:12345']
+    tags: ['user:12345']
 );
 
 // Append event
@@ -137,10 +137,10 @@ new Client(
 $client = new Client('http://localhost:50051');
 
 // TLS with self-signed certificate
-$client = new Client('https://localhost:50051', '/path/to/ca.pem');
+$client = new Client('https://localhost:50051', caPath: '/path/to/ca.pem');
 
 // Custom batch size
-$client = new Client('http://localhost:50051', null, 100);
+$client = new Client('http://localhost:50051', batchSize: 100);
 ```
 
 #### read()
@@ -266,7 +266,7 @@ Represents an event in the event store.
 $event = new Event(
     eventType: 'UserRegistered',
     data: json_encode(['userId' => '123', 'email' => 'user@example.com']),
-    tags: ['user', 'user:123', 'email:user@example.com'],
+    tags: ['user:123', 'email:' . sha1('user@example.com')],
     uuid: '550e8400-e29b-41d4-a716-446655440000'
 );
 ```
@@ -423,6 +423,7 @@ assert($position1 === $position2);  // true
 
 ```php
 $email = 'alice@example.com';
+$emailHash = sha1($email);
 
 // Define consistency boundary
 $boundaryQuery = new Query([
@@ -439,7 +440,7 @@ $condition = new AppendCondition($boundaryQuery, $head);
 $event = new Event(
     'UserRegistered',
     json_encode(['email' => $email, 'name' => 'Alice'}),
-    ['user', "email:{$email}"]
+    ["email:$emailHash"]
 );
 
 try {
@@ -459,7 +460,7 @@ $workflowId = 'workflow-123';
 $event1 = new Event(
     'WorkflowStarted',
     json_encode(['workflowId' => $workflowId]),
-    ['workflow', "workflow:{$workflowId}", 'step:1']
+    ["workflow:{$workflowId}", 'step:1']
 );
 $client->append([$event1]);
 
@@ -474,7 +475,7 @@ $condition = new AppendCondition($step2Boundary, $head);
 $event2 = new Event(
     'WorkflowStep2Completed',
     json_encode(['workflowId' => $workflowId, 'result' => 'success']),
-    ['workflow', "workflow:{$workflowId}", 'step:2']
+    ["workflow:{$workflowId}", 'step:2']
 );
 
 $client->append([$event2], $condition);  // Only succeeds once
