@@ -40,10 +40,14 @@ configure.in
 include/
 install-sh
 libtool
+libtool.real
 ltmain.sh
 missing
 mkinstalldirs
 modules/
+Makefile.fragments
+Makefile.objects
+-MMD
 
 # Extension Packages
 *.tgz
