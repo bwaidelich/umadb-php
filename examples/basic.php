@@ -40,7 +40,7 @@ if ($head === null) {
 // Create and append a simple event
 echo "Appending a simple event...\n";
 $event = new Event(
-    eventType: 'UserCreated',
+    event_type: 'UserCreated',
     data: json_encode([
         'userId' => '12345',
         'username' => 'john_doe',

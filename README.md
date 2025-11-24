@@ -91,7 +91,7 @@ $client = new Client('http://localhost:50051');
 
 // Create an event
 $event = new Event(
-    eventType: 'UserCreated',
+    event_type: 'UserCreated',
     data: json_encode(['userId' => '12345', 'name' => 'Alice']),
     tags: ['user:12345']
 );
@@ -120,15 +120,17 @@ echo "Current head: {$head}\n";
 ```php
 new Client(
     string $url,
-    ?string $caPath = null,
-    ?int $batchSize = null
+    ?string $ca_path = null,
+    ?int $batch_size = null
 )
 ```
 
 **Parameters:**
 - `$url` - Server URL (e.g., `http://localhost:50051` or `https://server:50051`)
-- `$caPath` - Optional path to CA certificate for TLS (self-signed certs)
-- `$batchSize` - Optional batch size hint for reading events (default: server decides)
+- `$ca_path` - Optional path to CA certificate for TLS (self-signed certs)
+- `$batch_size` - Optional batch size hint for reading events (default: server decides)
+
+**Note on Named Arguments:** Parameter names use snake_case (not camelCase). When using named arguments, all preceding optional parameters must be provided explicitly (even as `null`) due to ext-php-rs limitations.
 
 **Examples:**
 
@@ -137,10 +139,10 @@ new Client(
 $client = new Client('http://localhost:50051');
 
 // TLS with self-signed certificate
-$client = new Client('https://localhost:50051', caPath: '/path/to/ca.pem');
+$client = new Client('https://localhost:50051', ca_path: '/path/to/ca.pem');
 
-// Custom batch size
-$client = new Client('http://localhost:50051', batchSize: 100);
+// Custom batch size (must provide all parameters explicitly)
+$client = new Client('http://localhost:50051', ca_path: null, batch_size: 100);
 ```
 
 #### read()
@@ -245,7 +247,7 @@ if ($head === null) {
 
 ```php
 new Event(
-    string $eventType,
+    string $event_type,
     string $data,
     ?array $tags = null,
     ?string $uuid = null
@@ -264,7 +266,7 @@ Represents an event in the event store.
 
 ```php
 $event = new Event(
-    eventType: 'UserRegistered',
+    event_type: 'UserRegistered',
     data: json_encode(['userId' => '123', 'email' => 'user@example.com']),
     tags: ['user:123', 'email:' . sha1('user@example.com')],
     uuid: '550e8400-e29b-41d4-a716-446655440000'
@@ -343,7 +345,7 @@ $item = new QueryItem();
 
 ```php
 new AppendCondition(
-    Query $failIfEventsMatch,
+    Query $fail_if_events_match,
     ?int $after = null
 )
 ```
@@ -351,7 +353,7 @@ new AppendCondition(
 Condition for conditional appends, enabling optimistic concurrency control and business rule enforcement.
 
 **Parameters:**
-- `$failIfEventsMatch` - Query that must **not** match any existing events
+- `$fail_if_events_match` - Query that must **not** match any existing events
 - `$after` - Optional position constraint (fail if events exist after this position)
 
 **Examples:**
@@ -359,7 +361,7 @@ Condition for conditional appends, enabling optimistic concurrency control and b
 ```php
 // Prevent duplicate events
 $condition = new AppendCondition(
-    failIfEventsMatch: new Query([
+    fail_if_events_match: new Query([
         new QueryItem(types: ['UserRegistered'], tags: ['email:alice@example.com'])
     ])
 );
@@ -367,13 +369,13 @@ $condition = new AppendCondition(
 // Optimistic concurrency (position-based)
 $head = $client->head();
 $condition = new AppendCondition(
-    failIfEventsMatch: new Query([]),
+    fail_if_events_match: new Query([]),
     after: $head
 );
 
 // Combined: business rule + position check
 $condition = new AppendCondition(
-    failIfEventsMatch: $boundaryQuery,
+    fail_if_events_match: $boundaryQuery,
     after: $lastKnownPosition
 );
 ```

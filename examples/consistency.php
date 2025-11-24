@@ -49,7 +49,7 @@ echo "Existing users with {$email}: " . count($existingEvents) . "\n";
 
 // Create append condition
 $condition = new AppendCondition(
-    failIfEventsMatch: $boundaryQuery,
+    fail_if_events_match: $boundaryQuery,
     after: $head
 );
 
@@ -216,7 +216,7 @@ echo "Another process updated the resource\n";
 
 // Try to update based on old position (should fail)
 $condition = new AppendCondition(
-    failIfEventsMatch: new Query([]),  // Empty query
+    fail_if_events_match: new Query([]),  // Empty query
     after: $knownPosition  // Position check - fail if events exist after this
 );
 
