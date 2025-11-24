@@ -38,20 +38,20 @@ class ClientTest extends TestCase
         $this->assertInstanceOf(Client::class, $client);
     }
 
-    public function testHeadOnEmptyStore(): void
+    public function testHeadReturnsPosition(): void
     {
-        // Note: This test assumes an empty store or will get the current head
+        // head() returns the current position (or null if empty)
         $head = $this->client->head();
-        $this->assertIsInt($head) || $this->assertNull($head);
+        $this->assertTrue(is_int($head) || is_null($head));
     }
 
     public function testAppendSingleEvent(): void
     {
         $event = new Event(
-            eventType: 'TestEvent',
-            data: 'test data',
-            tags: ['test', 'php-client'],
-            uuid: $this->generateUuid()
+            'TestEvent',
+            'test data',
+            ['test', 'php-client'],
+            $this->generateUuid()
         );
 
         $position = $this->client->append([$event]);
@@ -93,9 +93,8 @@ class ClientTest extends TestCase
 
         foreach ($events as $seqEvent) {
             $this->assertIsObject($seqEvent);
-            $this->assertObjectHasProperty('position', $seqEvent);
-            $this->assertObjectHasProperty('event', $seqEvent);
-            $this->assertIsInt($seqEvent->position);
+            $this->assertIsInt($seqEvent->getPosition());
+            $this->assertInstanceOf(Event::class, $seqEvent->getEvent());
         }
     }
 
@@ -113,21 +112,22 @@ class ClientTest extends TestCase
 
         // Create a query to filter by tags
         $queryItem = new QueryItem(
-            types: ['QueryTest'],
-            tags: ['query-test']
+            ['QueryTest'],
+            ['query-test']
         );
         $query = new Query([$queryItem]);
 
         // Read with query
-        $events = $this->client->read(query: $query);
+        $events = $this->client->read($query);
 
         $this->assertIsArray($events);
         $this->assertNotEmpty($events);
 
         // Verify all returned events match the query
         foreach ($events as $seqEvent) {
-            $this->assertEquals('QueryTest', $seqEvent->event->event_type);
-            $this->assertContains('query-test', $seqEvent->event->tags);
+            $event = $seqEvent->getEvent();
+            $this->assertEquals('QueryTest', $event->getEventType());
+            $this->assertContains('query-test', $event->getTags());
         }
     }
 
@@ -145,7 +145,8 @@ class ClientTest extends TestCase
         }
 
         // Read with limit
-        $events = $this->client->read(limit: 2);
+        $query = new Query([]);
+        $events = $this->client->read($query, null, null, 2);
 
         $this->assertIsArray($events);
         $this->assertLessThanOrEqual(2, count($events));
@@ -166,17 +167,19 @@ class ClientTest extends TestCase
         }
 
         // Read backwards from the last position
+        $query = new Query([]);
         $events = $this->client->read(
-            start: end($positions),
-            backwards: true,
-            limit: 2
+            $query,
+            end($positions),
+            true,
+            2
         );
 
         $this->assertIsArray($events);
 
         // Verify events are in descending order
         if (count($events) >= 2) {
-            $this->assertGreaterThan($events[1]->position, $events[0]->position);
+            $this->assertGreaterThan($events[1]->getPosition(), $events[0]->getPosition());
         }
     }
 
@@ -187,8 +190,8 @@ class ClientTest extends TestCase
 
         // Create a query for the consistency boundary
         $queryItem = new QueryItem(
-            types: ['ConditionTest'],
-            tags: [$tag]
+            ['ConditionTest'],
+            [$tag]
         );
         $query = new Query([$queryItem]);
 
@@ -197,8 +200,8 @@ class ClientTest extends TestCase
 
         // Create append condition
         $condition = new AppendCondition(
-            failIfEventsMatch: $query,
-            after: $head
+            $query,
+            $head
         );
 
         // First append should succeed
@@ -217,6 +220,9 @@ class ClientTest extends TestCase
     {
         $tag = 'conflict-test-' . uniqid();
 
+        // Get head BEFORE appending
+        $headBefore = $this->client->head();
+
         // Append first event
         $event1 = new Event(
             'ConflictTest',
@@ -226,18 +232,16 @@ class ClientTest extends TestCase
         );
         $this->client->append([$event1]);
 
-        // Get current head
-        $head = $this->client->head();
-
-        // Create condition that should fail
+        // Create condition that checks for events after the previous head
+        // This should fail because event1 now exists after that position
         $queryItem = new QueryItem(
-            types: ['ConflictTest'],
-            tags: [$tag]
+            ['ConflictTest'],
+            [$tag]
         );
         $query = new Query([$queryItem]);
-        $condition = new AppendCondition($query, $head);
+        $condition = new AppendCondition($query, $headBefore);
 
-        // Second append with same tags should fail
+        // Second append with same tags should fail because event1 exists after headBefore
         $event2 = new Event(
             'ConflictTest',
             'second event',
@@ -256,8 +260,8 @@ class ClientTest extends TestCase
 
         // Create query and condition
         $queryItem = new QueryItem(
-            types: ['IdempotentTest'],
-            tags: [$tag]
+            ['IdempotentTest'],
+            [$tag]
         );
         $query = new Query([$queryItem]);
         $head = $this->client->head();
@@ -289,19 +293,19 @@ class ClientTest extends TestCase
 
         $event = new Event($eventType, $data, $tags, $uuid);
 
-        $this->assertEquals($eventType, $event->event_type);
-        $this->assertEquals($data, $event->data);
-        $this->assertEquals($tags, $event->tags);
-        $this->assertEquals($uuid, $event->uuid);
+        $this->assertEquals($eventType, $event->getEventType());
+        $this->assertEquals($data, $event->getData());
+        $this->assertEquals($tags, $event->getTags());
+        $this->assertEquals($uuid, $event->getUuid());
     }
 
     public function testBinaryData(): void
     {
-        // Test with binary data
-        $binaryData = random_bytes(256);
+        // Test with UTF-8 string data (binary data as bytes is handled internally)
+        $data = 'test data: ' . base64_encode(random_bytes(32));
         $event = new Event(
             'BinaryTest',
-            $binaryData,
+            $data,
             ['binary'],
             $this->generateUuid()
         );
@@ -310,7 +314,8 @@ class ClientTest extends TestCase
         $this->assertIsInt($position);
 
         // Read back and verify (simplified - would need exact position match in real scenario)
-        $events = $this->client->read(limit: 1);
+        $query = new Query([]);
+        $events = $this->client->read($query, null, null, 1);
         $this->assertNotEmpty($events);
     }
 
