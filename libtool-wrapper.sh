@@ -49,18 +49,54 @@ if [[ "$*" == *"--mode=link"* ]] && [[ "$*" == *"umadb.la"* ]]; then
     exit 0
 fi
 
-# For compile steps or other operations, use the real libtool if it exists
+# For compile steps, extract and run the compiler command directly
+if [[ "$*" == *"--mode=compile"* ]]; then
+    # Parse out the compiler and its arguments
+    # Skip libtool-specific args and pass through compiler args
+    args=()
+    skip_next=false
+    compiler="cc"
+
+    for arg in "$@"; do
+        if [ "$skip_next" = true ]; then
+            skip_next=false
+            continue
+        fi
+
+        case "$arg" in
+            --mode=compile|--tag=*|-I.|-DHAVE_CONFIG_H)
+                # Skip libtool-specific arguments
+                continue
+                ;;
+            -o)
+                # Collect output file argument
+                skip_next=true
+                args+=("$arg")
+                ;;
+            *.c|*.cc|*.cpp|-c|-I*|-D*|-g|-O*|-fno-common|-DPIC|-MMD|-MF|-MT)
+                # Pass through compiler arguments
+                args+=("$arg")
+                ;;
+            cc|gcc|g++|clang|clang++)
+                # Detect compiler
+                compiler="$arg"
+                ;;
+        esac
+    done
+
+    # Execute the compiler
+    exec "$compiler" "${args[@]}"
+fi
+
+# For other operations, try to use the real libtool if it exists
 if [ -f "$SCRIPT_DIR/libtool.real" ]; then
     exec "$SCRIPT_DIR/libtool.real" "$@"
 elif [ -f "./libtool.real" ]; then
     exec ./libtool.real "$@"
 else
-    # Fallback: for compile mode, just run cc directly
-    if [[ "$*" == *"--mode=compile"* ]]; then
-        # Extract the actual cc command from libtool args
-        # This is a simplified version - just pass through to cc
-        exec cc "$@"
-    fi
+    # If no real libtool exists and this is an unhandled operation,
+    # provide a helpful error message
     echo "Error: Real libtool not found and don't know how to handle: $*"
+    echo "This extension requires Cargo to build. The libtool wrapper should intercept the build."
     exit 1
 fi

@@ -35,7 +35,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
  <date>2025-11-24</date>
  <time>12:00:00</time>
  <version>
-  <release>0.1.1</release>
+  <release>0.1.2</release>
   <api>0.1.0</api>
  </version>
  <stability>
@@ -44,7 +44,12 @@ http://pear.php.net/dtd/package-2.0.xsd">
  </stability>
  <license uri="https://opensource.org/license/mit">MIT</license>
  <notes>
-  Updated release with PHP 8.4+ support.
+  Bug fix release for PIE installation.
+
+  Changes in 0.1.2:
+  - Fixed PIE installation failure on macOS due to libtool wrapper issues
+  - Improved libtool-wrapper.sh to handle compile operations independently
+  - Added LIBTOOL override in config.m4 for better build system integration
 
   Changes in 0.1.1:
   - Updated ext-php-rs from 0.12 to 0.15 (adds PHP 8.4 support)

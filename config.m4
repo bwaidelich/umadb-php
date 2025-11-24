@@ -32,6 +32,11 @@ if test "$PHP_UMADB" != "no"; then
   dnl Build with cargo
   AC_MSG_NOTICE([Building Rust extension with cargo...])
 
+  dnl Override LIBTOOL to use our wrapper script
+  dnl This ensures the wrapper is used instead of the auto-generated libtool
+  LIBTOOL='$(SHELL) $(top_srcdir)/libtool-wrapper.sh'
+  PHP_SUBST(LIBTOOL)
+
   dnl Add custom build step that overrides the default build
   PHP_ADD_MAKEFILE_FRAGMENT
 
