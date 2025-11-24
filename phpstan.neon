@@ -1,0 +1,9 @@
+parameters:
+    level: max
+    paths:
+        - src/php
+        - tests
+    scanFiles:
+        - stubs/umadb.stub.php
+    excludePaths:
+        - vendor
