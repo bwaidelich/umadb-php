@@ -176,7 +176,7 @@ $events = $client->read();
 
 // Read with query
 $query = new Query([
-    new QueryItem(types: ['OrderCreated'], tags: ['order'])
+    new QueryItem(types: ['OrderCreated'], tags: ['order:1234'])
 ]);
 $events = $client->read(query: $query);
 
@@ -210,7 +210,7 @@ Appends events to the event store.
 
 ```php
 // Simple append
-$event = new Event('UserCreated', $data, ['user']);
+$event = new Event('UserCreated', $data, ['user:1234']);
 $position = $client->append([$event]);
 
 // Append with condition
@@ -219,8 +219,8 @@ $position = $client->append([$event], $condition);
 
 // Append multiple events
 $position = $client->append([
-    new Event('OrderCreated', $data1, ['order']),
-    new Event('OrderPaid', $data2, ['order', 'payment']),
+    new Event('OrderCreated', $data1, ['order:1234']),
+    new Event('OrderPaid', $data2, ['order:1234', 'payment:4321']),
 ]);
 ```
 
@@ -298,8 +298,8 @@ A query for filtering events. An event matches if it matches **any** query item 
 
 ```php
 $query = new Query([
-    new QueryItem(types: ['UserCreated'], tags: ['user']),
-    new QueryItem(types: ['UserUpdated'], tags: ['user']),
+    new QueryItem(types: ['UserCreated'], tags: ['user:1234']),
+    new QueryItem(types: ['UserUpdated'], tags: ['user:1235']),
 ]);
 ```
 
@@ -362,7 +362,7 @@ Condition for conditional appends, enabling optimistic concurrency control and b
 // Prevent duplicate events
 $condition = new AppendCondition(
     fail_if_events_match: new Query([
-        new QueryItem(types: ['UserRegistered'], tags: ['email:alice@example.com'])
+        new QueryItem(types: ['UserRegistered'], tags: ['user:1234'])
     ])
 );
 
@@ -410,7 +410,7 @@ Use UUIDs to make appends idempotent:
 
 ```php
 $uuid = '550e8400-e29b-41d4-a716-446655440000';
-$event = new Event('OrderCreated', $data, ['order'], $uuid);
+$event = new Event('OrderCreated', $data, ['order:1234'], $uuid);
 
 // First append
 $position1 = $client->append([$event]);  // Returns position 100
@@ -429,7 +429,7 @@ $emailHash = sha1($email);
 
 // Define consistency boundary
 $boundaryQuery = new Query([
-    new QueryItem(types: ['UserRegistered'], tags: ["email:{$email}"])
+    new QueryItem(types: ['UserRegistered'], tags: ["email:{$emailHash}"])
 ]);
 
 // Read current state
@@ -501,9 +501,9 @@ $specificOrderEvents = $client->read(query: $query);
 // Complex query (OR logic between items)
 $query = new Query([
     // Match user events
-    new QueryItem(types: ['UserCreated'], tags: ['user']),
+    new QueryItem(types: ['UserCreated'], tags: ['user:1234']),
     // OR payment events
-    new QueryItem(types: ['PaymentProcessed'], tags: ['payment']),
+    new QueryItem(types: ['PaymentProcessed'], tags: ['payment:4321']),
 ]);
 $events = $client->read(query: $query);
 ```
