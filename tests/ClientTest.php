@@ -321,6 +321,25 @@ class ClientTest extends TestCase
         $this->assertNotEmpty($events);
     }
 
+    public function testClientConstructionWithApiKey(): void
+    {
+        // Test that client accepts API key parameter
+        // Note: This test won't validate authentication without a configured server
+        $client = new Client(self::SERVER_URL, null, null, 'test-api-key');
+        $this->assertInstanceOf(Client::class, $client);
+    }
+
+    public function testApiKeyRequiresTls(): void
+    {
+        // API key should only work with TLS (https://)
+        $this->expectException(TransportException::class);
+        $this->expectExceptionMessage('API key configured but TLS is not enabled');
+
+        $client = new Client('http://127.0.0.1:50051', null, null, 'test-api-key');
+        // Attempt an operation to trigger the validation
+        $client->head();
+    }
+
     private function generateUuid(): string
     {
         return sprintf(

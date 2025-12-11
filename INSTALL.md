@@ -16,7 +16,7 @@ Before installing the UmaDB PHP extension, ensure you have:
 ```bash
 # Install PHP and development headers
 sudo apt update
-sudo apt install php8.2 php8.2-dev
+sudo apt install php8.4 php8.4-dev
 
 # Install Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh

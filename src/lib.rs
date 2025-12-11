@@ -429,13 +429,15 @@ impl Client {
     /// - `url` - Server URL (e.g., "http://localhost:50051" or "https://server:50051")
     /// - `ca_path` - Optional path to CA certificate file for TLS
     /// - `batch_size` - Optional batch size for reading events
+    /// - `api_key` - Optional API key for authentication (requires TLS)
     ///
     /// # Throws
-    /// - TransportException if connection fails
+    /// - TransportException if connection fails or API key used without TLS
     pub fn __construct(
         url: String,
         ca_path: Option<String>,
         batch_size: Option<u32>,
+        api_key: Option<String>,
     ) -> PhpResult<Self> {
         let mut client_builder = RustUmaDBClient::new(url);
 
@@ -445,6 +447,10 @@ impl Client {
 
         if let Some(size) = batch_size {
             client_builder = client_builder.batch_size(size);
+        }
+
+        if let Some(key) = api_key {
+            client_builder = client_builder.api_key(key);
         }
 
         let inner = client_builder.connect().map_err(dcb_error_to_exception)?;
