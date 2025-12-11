@@ -122,6 +122,7 @@ new Client(
     string $url,
     ?string $ca_path = null,
     ?int $batch_size = null
+    ?string $api_key = null
 )
 ```
 
@@ -129,6 +130,7 @@ new Client(
 - `$url` - Server URL (e.g., `http://localhost:50051` or `https://server:50051`)
 - `$ca_path` - Optional path to CA certificate for TLS (self-signed certs)
 - `$batch_size` - Optional batch size hint for reading events (default: server decides)
+- `$api_key` - Optional API key for authentication
 
 **Note on Named Arguments:** Parameter names use snake_case (not camelCase). When using named arguments, all preceding optional parameters must be provided explicitly (even as `null`) due to ext-php-rs limitations.
 
@@ -143,6 +145,9 @@ $client = new Client('https://localhost:50051', ca_path: '/path/to/ca.pem');
 
 // Custom batch size (must provide all parameters explicitly)
 $client = new Client('http://localhost:50051', ca_path: null, batch_size: 100);
+
+// API key (must provide all parameters explicitly)
+$client = new Client('http://localhost:50051', ca_path: null, batch_size: null, api_key: 'secret-key');
 ```
 
 #### read()
