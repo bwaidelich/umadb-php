@@ -47,13 +47,31 @@ jobs:
 
       - name: Install protobuf compiler (Windows)
         if: runner.os == 'Windows'
-        shell: powershell
-        run: choco install protoc -y
+        shell: pwsh
+        run: |
+          choco install protoc -y
+          Write-Host "Protoc version:"
+          protoc --version
+          Write-Host "Protoc location:"
+          Get-Command protoc | Select-Object -ExpandProperty Source
 
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
+          extensions: none
+          tools: php-config
+
+      - name: Verify PHP setup (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Write-Host "PHP version:"
+          php -v
+          Write-Host "`nPHP config:"
+          php-config --version 2>&1 || Write-Host "php-config not available"
+          Write-Host "`nPHP include path:"
+          php-config --include-dir 2>&1 || Write-Host "php-config --include-dir failed"
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -67,6 +85,13 @@ jobs:
 
       - name: Build extension
         run: cargo build --release --target ${{ matrix.target }}
+
+      - name: List built files (Windows debug)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Write-Host "Listing files in target\${{ matrix.target }}\release\"
+          Get-ChildItem -Path target\${{ matrix.target }}\release\ -Filter *.dll | Format-Table Name, Length
 
       - name: Rename artifact (Unix)
         if: runner.os != 'Windows'
