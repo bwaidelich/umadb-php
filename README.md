@@ -4,6 +4,9 @@ PHP bindings for [UmaDB](https://github.com/umadb-io/umadb) event store, built w
 
 UmaDB is a specialist event store for **Dynamic Consistency Boundaries (DCB)**, enabling flexible, query-driven append conditions for implementing business rules without hardcoded aggregate boundaries.
 
+> [!NOTE]  
+> See [wwwision/dcb-eventstore-umadb](https://github.com/bwaidelich/dcb-eventstore-umadb) for a more convenient and typesafe API
+
 ## Features
 
 - ✨ **Full DCB API** - Complete implementation of the Dynamic Consistency Boundaries specification
