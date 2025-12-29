@@ -43,7 +43,7 @@ fn ensure_exception_classes() {
         ext_php_rs::ffi::zend_eval_string(
             code.as_ptr() as *mut _,
             std::ptr::null_mut(),
-            b"umadb exception classes\0".as_ptr() as *const _,
+            c"umadb exception classes".as_ptr() as *const _,
         );
     }
 }
@@ -73,7 +73,7 @@ fn dcb_error_to_exception(err: DCBError) -> PhpException {
         }
         DCBError::Corruption(msg) => throw_exception("UmaDB\\Exception\\CorruptionException", msg),
         DCBError::Io(err) => throw_exception("UmaDB\\Exception\\IoException", err.to_string()),
-        _ => throw_exception("UmaDB\\Exception\\UmaDBException", format!("{:?}", err)),
+        _ => throw_exception("UmaDB\\Exception\\UmaDBException", format!("{err:?}")),
     }
 }
 
@@ -165,7 +165,7 @@ impl Event {
         let uuid = if let Some(uuid_str) = &self.uuid {
             Some(
                 Uuid::parse_str(uuid_str)
-                    .map_err(|e| PhpException::default(format!("Invalid UUID: {}", e)))?,
+                    .map_err(|e| PhpException::default(format!("Invalid UUID: {e}")))?,
             )
         } else {
             None
@@ -321,11 +321,7 @@ impl Query {
     /// - `items` - Optional array of QueryItem objects
     pub fn __construct(items: Option<Vec<&QueryItem>>) -> Self {
         Self {
-            items: items
-                .unwrap_or_default()
-                .into_iter()
-                .map(|i| i.clone())
-                .collect(),
+            items: items.unwrap_or_default().into_iter().cloned().collect(),
         }
     }
 
