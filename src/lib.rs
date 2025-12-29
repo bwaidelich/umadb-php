@@ -6,9 +6,8 @@
 use ext_php_rs::prelude::*;
 use umadb_client::UmaDBClient as RustUmaDBClient;
 use umadb_dcb::{
-    DCBAppendCondition as RustAppendCondition, DCBError, DCBEvent as RustEvent,
-    DCBEventStoreSync, DCBQuery as RustQuery, DCBQueryItem as RustQueryItem,
-    DCBSequencedEvent as RustSequencedEvent,
+    DCBAppendCondition as RustAppendCondition, DCBError, DCBEvent as RustEvent, DCBEventStoreSync,
+    DCBQuery as RustQuery, DCBQueryItem as RustQueryItem, DCBSequencedEvent as RustSequencedEvent,
 };
 use uuid::Uuid;
 
@@ -72,15 +71,9 @@ fn dcb_error_to_exception(err: DCBError) -> PhpException {
         DCBError::TransportError(msg) => {
             throw_exception("UmaDB\\Exception\\TransportException", msg)
         }
-        DCBError::Corruption(msg) => {
-            throw_exception("UmaDB\\Exception\\CorruptionException", msg)
-        }
-        DCBError::Io(err) => {
-            throw_exception("UmaDB\\Exception\\IoException", err.to_string())
-        }
-        _ => {
-            throw_exception("UmaDB\\Exception\\UmaDBException", format!("{:?}", err))
-        }
+        DCBError::Corruption(msg) => throw_exception("UmaDB\\Exception\\CorruptionException", msg),
+        DCBError::Io(err) => throw_exception("UmaDB\\Exception\\IoException", err.to_string()),
+        _ => throw_exception("UmaDB\\Exception\\UmaDBException", format!("{:?}", err)),
     }
 }
 
@@ -223,7 +216,11 @@ impl SequencedEvent {
     /// String representation
     #[allow(non_snake_case)]
     pub fn __toString(&self) -> String {
-        format!("SequencedEvent(position={}, event={})", self.position, self.event.__toString())
+        format!(
+            "SequencedEvent(position={}, event={})",
+            self.position,
+            self.event.__toString()
+        )
     }
 }
 
@@ -324,7 +321,11 @@ impl Query {
     /// - `items` - Optional array of QueryItem objects
     pub fn __construct(items: Option<Vec<&QueryItem>>) -> Self {
         Self {
-            items: items.unwrap_or_default().into_iter().map(|i| i.clone()).collect(),
+            items: items
+                .unwrap_or_default()
+                .into_iter()
+                .map(|i| i.clone())
+                .collect(),
         }
     }
 
@@ -526,10 +527,8 @@ impl Client {
         events: Vec<&Event>,
         condition: Option<&AppendCondition>,
     ) -> PhpResult<u64> {
-        let rust_events: Result<Vec<RustEvent>, PhpException> = events
-            .iter()
-            .map(|e| e.to_dcb_event())
-            .collect();
+        let rust_events: Result<Vec<RustEvent>, PhpException> =
+            events.iter().map(|e| e.to_dcb_event()).collect();
 
         let rust_events = rust_events?;
         let rust_condition = condition.map(|c| c.clone().into());
