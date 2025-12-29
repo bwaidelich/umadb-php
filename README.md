@@ -26,7 +26,23 @@ UmaDB is a specialist event store for **Dynamic Consistency Boundaries (DCB)**, 
 
 ## Installation
 
-### Option 1: Pre-built Binaries (Recommended)
+### Option 1: PIE (Recommended)
+
+**Note:** Requires Rust 1.70+ and PIE installed. See [PIE.md](PIE.md) for details.
+
+```bash
+# Install Rust (if not already installed)
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+# Install PIE
+wget https://github.com/php/pie/releases/latest/download/pie.phar
+chmod +x pie.phar && sudo mv pie.phar /usr/local/bin/pie
+
+# Install extension
+pie install wwwision/umadb-php
+```
+
+### Option 2: Pre-built Binaries
 
 Download the pre-compiled extension for your platform from the [latest release](https://github.com/bwaidelich/umadb-php/releases/latest):
 
@@ -61,22 +77,6 @@ wget https://github.com/bwaidelich/umadb-php/releases/latest/download/umadb-linu
 
 # Verify (Linux/macOS)
 shasum -a 256 -c umadb-linux-x86_64.so.sha256
-```
-
-### Option 2: PIE
-
-**Note:** Requires Rust 1.70+ and PIE installed. See [PIE.md](PIE.md) for details.
-
-```bash
-# Install Rust (if not already installed)
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-
-# Install PIE
-wget https://github.com/php/pie/releases/latest/download/pie.phar
-chmod +x pie.phar && sudo mv pie.phar /usr/local/bin/pie
-
-# Install extension
-pie install wwwision/umadb-php
 ```
 
 ### Option 3: Building from Source
