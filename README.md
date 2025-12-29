@@ -21,12 +21,49 @@ UmaDB is a specialist event store for **Dynamic Consistency Boundaries (DCB)**, 
 ## Requirements
 
 - **PHP** 8.4 or higher
-- **Rust** 1.70 or higher (for building)
 - **UmaDB Server** running and accessible
+- **Rust** 1.70 or higher (only for building from source)
 
 ## Installation
 
-### Option 1: PIE (Recommended)
+### Option 1: Pre-built Binaries (Recommended)
+
+Download the pre-compiled extension for your platform from the [latest release](https://github.com/bwaidelich/umadb-php/releases/latest):
+
+**Linux (x86_64):**
+```bash
+wget https://github.com/bwaidelich/umadb-php/releases/latest/download/umadb-linux-x86_64.so
+sudo cp umadb-linux-x86_64.so $(php-config --extension-dir)/umadb.so
+```
+
+**macOS (Intel):**
+```bash
+wget https://github.com/bwaidelich/umadb-php/releases/latest/download/umadb-macos-x86_64.dylib
+sudo cp umadb-macos-x86_64.dylib $(php-config --extension-dir)/umadb.so
+```
+
+**macOS (Apple Silicon):**
+```bash
+wget https://github.com/bwaidelich/umadb-php/releases/latest/download/umadb-macos-arm64.dylib
+sudo cp umadb-macos-arm64.dylib $(php-config --extension-dir)/umadb.so
+```
+
+**Windows (x86_64):**
+```powershell
+# Download from releases page and copy to PHP extension directory
+copy umadb-windows-x86_64.dll C:\path\to\php\ext\umadb.dll
+```
+
+**Verify checksum (optional but recommended):**
+```bash
+# Download checksum file
+wget https://github.com/bwaidelich/umadb-php/releases/latest/download/umadb-linux-x86_64.so.sha256
+
+# Verify (Linux/macOS)
+shasum -a 256 -c umadb-linux-x86_64.so.sha256
+```
+
+### Option 2: PIE
 
 **Note:** Requires Rust 1.70+ and PIE installed. See [PIE.md](PIE.md) for details.
 
@@ -42,7 +79,7 @@ chmod +x pie.phar && sudo mv pie.phar /usr/local/bin/pie
 pie install wwwision/umadb-php
 ```
 
-### Option 2: Building from Source
+### Option 3: Building from Source
 
 ```bash
 # Clone the repository
@@ -63,16 +100,16 @@ See [INSTALL.md](INSTALL.md) for detailed instructions.
 
 ### Enable the Extension
 
-Add to your `php.ini`:
+After installation (any option), add to your `php.ini`:
 
 ```ini
-extension=umadb_php.so
+extension=umadb.so
 ```
 
 Or for CLI only, use:
 
 ```bash
-php -d extension=umadb_php.so your-script.php
+php -d extension=umadb.so your-script.php
 ```
 
 Verify installation:
