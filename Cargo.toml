@@ -1,7 +1,7 @@
 [package]
 name = "umadb"
-version = "0.1.4"
-edition = "2021"
+version = "0.1.5"
+edition = "2024"
 license = "MIT"
 description = "PHP bindings for UmaDB event store"
 repository = "https://github.com/bwaidelich/umadb-php"
@@ -13,17 +13,17 @@ crate-type = ["cdylib"]
 
 [dependencies]
 # UmaDB client and DCB types
-umadb-client = { git = "https://github.com/umadb-io/umadb.git", package = "umadb-client" }
-umadb-dcb = { git = "https://github.com/umadb-io/umadb.git", package = "umadb-dcb" }
+umadb-client = { git = "https://github.com/umadb-io/umadb.git", package = "umadb-client", tag = "v0.1.30" }
+umadb-dcb = { git = "https://github.com/umadb-io/umadb.git", package = "umadb-dcb", tag = "v0.1.30" }
 
 # PHP bindings framework
-ext-php-rs = "0.15"
+ext-php-rs = "0.15.2"
 
 # UUID support
-uuid = { version = "1.18", features = ["v4"] }
+uuid = { version = "1.19", features = ["v4"] }
 
 # Async runtime (used internally by client)
-tokio = { version = "1.48", features = ["rt-multi-thread"] }
+tokio = { version = "1", features = ["rt-multi-thread"] }
 
 [profile.release]
 lto = true
