@@ -34,6 +34,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install protobuf compiler (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y protobuf-compiler
+
+      - name: Install protobuf compiler (macOS)
+        if: runner.os == 'macOS'
+        run: brew install protobuf
+
+      - name: Install protobuf compiler (Windows)
+        if: runner.os == 'Windows'
+        run: choco install protoc
+
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
