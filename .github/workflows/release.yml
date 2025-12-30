@@ -26,10 +26,6 @@ jobs:
             target: aarch64-apple-darwin
             ext: dylib
             artifact: umadb-macos-arm64.dylib
-          - os: windows-latest
-            target: x86_64-pc-windows-msvc
-            ext: dll
-            artifact: umadb-windows-x86_64.dll
 
     runs-on: ${{ matrix.os }}
 
@@ -45,31 +41,10 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install protobuf
 
-      - name: Install protobuf compiler (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          choco install protoc -y
-          Write-Host "Protoc version:"
-          protoc --version
-          Write-Host "Protoc location:"
-          Get-Command protoc | Select-Object -ExpandProperty Source
-
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
-
-      - name: Verify PHP setup (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          Write-Host "PHP version:"
-          php -v
-          Write-Host "`nPHP executable:"
-          Get-Command php | Select-Object -ExpandProperty Source
-          Write-Host "`nEnvironment variables:"
-          Get-ChildItem Env: | Where-Object { $_.Name -like '*PHP*' } | Format-Table Name, Value
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -84,34 +59,13 @@ jobs:
       - name: Build extension
         run: cargo build --release --target ${{ matrix.target }}
 
-      - name: List built files (Windows debug)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          Write-Host "Listing files in target\${{ matrix.target }}\release\"
-          Get-ChildItem -Path target\${{ matrix.target }}\release\ -Filter *.dll | Format-Table Name, Length
-
-      - name: Rename artifact (Unix)
-        if: runner.os != 'Windows'
+      - name: Rename artifact
         run: |
           cp target/${{ matrix.target }}/release/libumadb.${{ matrix.ext }} ${{ matrix.artifact }}
 
-      - name: Rename artifact (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          copy target\${{ matrix.target }}\release\umadb.${{ matrix.ext }} ${{ matrix.artifact }}
-
-      - name: Generate checksum (Unix)
-        if: runner.os != 'Windows'
+      - name: Generate checksum
         run: |
           shasum -a 256 ${{ matrix.artifact }} > ${{ matrix.artifact }}.sha256
-
-      - name: Generate checksum (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          $hash = Get-FileHash -Algorithm SHA256 -Path "${{ matrix.artifact }}"
-          "$($hash.Hash.ToLower())  ${{ matrix.artifact }}" | Out-File -Encoding ASCII -FilePath "${{ matrix.artifact }}.sha256"
 
       - name: Upload release assets
         uses: softprops/action-gh-release@v2

@@ -64,12 +64,6 @@ wget https://github.com/bwaidelich/umadb-php/releases/latest/download/umadb-maco
 sudo cp umadb-macos-arm64.dylib $(php-config --extension-dir)/umadb.so
 ```
 
-**Windows (x86_64):**
-```powershell
-# Download from releases page and copy to PHP extension directory
-copy umadb-windows-x86_64.dll C:\path\to\php\ext\umadb.dll
-```
-
 **Verify checksum (optional but recommended):**
 ```bash
 # Download checksum file
