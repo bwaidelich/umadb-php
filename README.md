@@ -17,6 +17,7 @@ UmaDB is a specialist event store for **Dynamic Consistency Boundaries (DCB)**, 
 - 🔄 **Idempotent Appends** - UUID-based event deduplication
 - 🏷️ **Tag-based Filtering** - Efficient event queries
 - ⚡ **Optimistic Concurrency** - Position-based conflict detection
+- 🧵 **Thread Safe (ZTS)** - Full support for FrankenPHP and multi-threaded environments
 
 ## Requirements
 
@@ -606,8 +607,19 @@ This extension uses **ext-php-rs** to create Rust-powered PHP extensions with:
 - **Type-safe FFI** between PHP and Rust
 - **Automatic memory management** via reference counting
 - **Native PHP exception** handling
+- **Thread-safe design** for ZTS and FrankenPHP compatibility
 
 The extension wraps the `umadb-client` Rust crate, providing a synchronous client that internally manages a Tokio runtime for async gRPC operations.
+
+### FrankenPHP & Multi-Threading
+
+The extension fully supports **FrankenPHP** and other multi-threaded PHP environments:
+- Built with ZTS (Zend Thread Safety) support enabled
+- Thread-safe initialization using Rust's `std::sync::Once`
+- Each client instance is independent and thread-safe
+- No global mutable state
+
+When compiled against FrankenPHP's ZTS-enabled PHP, the extension automatically uses thread-safe code paths. No special configuration is needed.
 
 ## Comparison with Python Bindings
 

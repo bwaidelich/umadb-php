@@ -4,6 +4,7 @@
 //! following the same patterns as the Python bindings.
 
 use ext_php_rs::prelude::*;
+use std::sync::Once;
 use umadb_client::UmaDBClient as RustUmaDBClient;
 use umadb_dcb::{
     DCBAppendCondition as RustAppendCondition, DCBError, DCBEvent as RustEvent, DCBEventStoreSync,
@@ -28,24 +29,30 @@ namespace UmaDB\Exception {
 }
 "#;
 
-/// Ensure exception classes are defined
+/// Static initialization guard for exception classes (ZTS-safe)
+static EXCEPTION_CLASSES_INIT: Once = Once::new();
+
+/// Ensure exception classes are defined (thread-safe)
 fn ensure_exception_classes() {
     use std::ffi::CString;
 
-    // Try to find one of the exception classes to see if they're already defined
-    if ClassEntry::try_find("UmaDB\\Exception\\IntegrityException").is_some() {
-        return; // Already defined
-    }
+    // Use Once to ensure this only happens once across all threads
+    EXCEPTION_CLASSES_INIT.call_once(|| {
+        // Try to find one of the exception classes to see if they're already defined
+        if ClassEntry::try_find("UmaDB\\Exception\\IntegrityException").is_some() {
+            return; // Already defined
+        }
 
-    // Define the exception classes by evaluating PHP code
-    unsafe {
-        let code = CString::new(EXCEPTION_CLASSES_PHP).unwrap();
-        ext_php_rs::ffi::zend_eval_string(
-            code.as_ptr() as *mut _,
-            std::ptr::null_mut(),
-            c"umadb exception classes".as_ptr() as *const _,
-        );
-    }
+        // Define the exception classes by evaluating PHP code
+        unsafe {
+            let code = CString::new(EXCEPTION_CLASSES_PHP).unwrap();
+            ext_php_rs::ffi::zend_eval_string(
+                code.as_ptr() as *mut _,
+                std::ptr::null_mut(),
+                c"umadb exception classes".as_ptr() as *const _,
+            );
+        }
+    });
 }
 
 /// Helper to throw a specific exception class by name

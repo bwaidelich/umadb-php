@@ -32,7 +32,7 @@
   "php-ext": {
     "extension-name": "umadb",
     "priority": 20,
-    "support-zts": false,
+    "support-zts": true,
     "configure-options": [
       {
         "name": "enable-umadb",
